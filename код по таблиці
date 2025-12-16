@@ -1,0 +1,86 @@
+
+CREATE DATABASE IF NOT EXISTS company;
+USE company;
+
+
+CREATE TABLE `department` (
+	`department_id` INT NOT NULL AUTO_INCREMENT,
+	`building_no` INT(4),
+	`department_name` VARCHAR(30) NOT NULL,
+	`city` VARCHAR(30) NOT NULL DEFAULT 'Lviv', 
+	`street` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`department_id`)
+);
+
+
+CREATE TABLE `employee` (
+	`employee_id` INT NOT NULL,
+	`user_name` VARCHAR(30) NOT NULL,
+	`first_name` VARCHAR(30) NOT NULL,
+	`last_name` VARCHAR(30) NOT NULL,
+	`position` VARCHAR(30) NOT NULL,
+	`employment_date` DATE NOT NULL,
+	`department_id` INT,
+	`manager_id` INT,
+	`rate` FLOAT(53) NOT NULL,
+	`bonus` FLOAT(53),
+	PRIMARY KEY (`employee_id`),
+	UNIQUE (`user_name`) 
+);
+
+
+CREATE TABLE `customer` (
+	`customer_id` INT NOT NULL AUTO_INCREMENT,
+	`first_name` VARCHAR(30) NOT NULL,
+	`last_name` VARCHAR(30) NOT NULL,
+	`genger` VARCHAR(1) NOT NULL,
+	`birth_date` DATE NOT NULL,
+	`phone_number` BIGINT(15) NOT NULL,
+	`email` VARCHAR(50) NOT NULL,
+	`discount` INT,
+	PRIMARY KEY (`customer_id`)
+);
+
+
+CREATE TABLE `product` (
+	`product_id` INT NOT NULL AUTO_INCREMENT,
+	`product_name` VARCHAR(40) NOT NULL,
+	`product_description` VARCHAR(150) NOT NULL,
+	`category` VARCHAR(15) NOT NULL,
+	`manufacture` VARCHAR(30) NOT NULL,
+	`product_type` VARCHAR(15) NOT NULL,
+	`amount` INT NOT NULL,
+	`price` FLOAT(53) NOT NULL,
+	PRIMARY KEY (`product_id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `invoice` (
+	`invoice_id` BIGINT(15) NOT NULL,
+	`employee_id` INT NOT NULL,
+	`customer_id` INT, 
+	`payment_method` INT NOT NULL,
+	`transaction_moment` DATETIME NOT NULL,
+	`status` VARCHAR(10) NOT NULL,
+	PRIMARY KEY (`invoice_id`)
+);
+
+
+CREATE TABLE `orders` (
+	`orders_id` INT NOT NULL AUTO_INCREMENT,
+	`product_id` INT NOT NULL,
+	`invoice_id` BIGINT(15) NOT NULL, 
+	`order_datetime` DATETIME NOT NULL, 
+	`quantity` INT NOT NULL, 
+	PRIMARY KEY (`orders_id`)
+);
+
+
+ALTER TABLE `employee` ADD CONSTRAINT `employee_fk_department` FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`);
+ALTER TABLE `employee` ADD CONSTRAINT `employee_fk_manager` FOREIGN KEY (`manager_id`) REFERENCES `employee`(`employee_id`);
+
+ALTER TABLE `orders` ADD CONSTRAINT `orders_fk_product` FOREIGN KEY (`product_id`) REFERENCES `product`(`product_id`);
+ALTER TABLE `orders` ADD CONSTRAINT `orders_fk_invoice` FOREIGN KEY (`invoice_id`) REFERENCES `invoice`(`invoice_id`); 
+
+ALTER TABLE `invoice` ADD CONSTRAINT `invoice_fk_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`); 
+ALTER TABLE `invoice` ADD CONSTRAINT `invoice_fk_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`); 
