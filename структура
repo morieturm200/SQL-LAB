@@ -1,0 +1,54 @@
+
+department {
+	department_id integer pk increments
+	building_no integer null
+	department_name varchar(30)
+	city varchar(30) def(Lviv)
+	street varchar(40)
+}
+
+employee {
+	employee_id integer pk
+	user_name varchar(30)
+	first_name varchar(30)
+	last_name varchar(30)
+	position varchar(15)
+	employment_date date
+	department_id integer null *> department.department_id
+	manager_id integer null *> employee.employee_id
+	rate float
+	bonus float null
+}
+
+customer {
+	customer_id integer pk increments
+	first_name varchar(30)
+	last_name varchar(30)
+	genger varchar(1)
+	birth_date date
+	phone_number integer
+	email varchar(50)
+	discount integer null
+}
+
+product {
+	product_id integer pk increments
+	product_name varchar(40)
+	product_description varchar(150)
+	category varchar(15)
+	manufacture varchar(30)
+	product_type varchar(15)
+	amount integer
+	price float
+}
+
+orders {
+	orders_id integer pk increments
+	employee_id integer *> employee.employee_id
+	product_id integer *> product.product_id
+	customer_id integer *> customer.customer_id
+	transaction_type integer
+	transaction_moment datetime
+	amount integer
+}
+
